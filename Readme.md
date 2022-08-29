@@ -18,8 +18,8 @@ Limitations:
 - Empirical observations show that corners and overhangs are overheating faster than other parts. This is currently not working in the simulation. The thermal conduction in the part is currently possibly too high leading to a bad resolution in x-y plane.
 
 
-###Sample output images from the exported gcode files:
+### Sample output images from the exported gcode files:
 - Image 1: Overheating visible where the minimum layer duration of Cura (used in the area with the lowest cross-section) stops working  because the overhangs are printed with slower speed.
 ![img.png](img.png)
 - Image 2: The yellow areas in the middle of the cylinder are the first extrusion of their layer. They are colder because the material in the layer below cooled down. The green area on top of the cylinder is the effect of printing solid layers on top of the mostly hollow cylinder.
-- ![img_1.png](img_1.png)
+![img_1.png](img_1.png)
