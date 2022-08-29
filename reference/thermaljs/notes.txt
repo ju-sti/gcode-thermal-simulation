@@ -1,0 +1,22 @@
+Meeting outline:
+
+software:
+1. cloud based computing:
+  - cline side computing: running JavaScript on client side. The advantage is we
+  don't need to provide computing power. The disadvantage is it is hard to hide
+  the code from user.
+  - server side computing: let user upload a file, the server can send the file
+  to a remote server to compute and send the results back. The advantage is we
+  can hide the code completely from the user. The disadvantage is data transmission
+  overhead.
+
+Paper:
+1. Add a figure of active body to the paper;
+2. Rewrite the convergence and stability analysis of the numerical scheme;
+
+Inverse Problem:
+1. I formulated a integer programming (IP) to calculate the optimal tool path in a layer
+The layer is divided into grids
+Decision variable: The deposition time of each grid
+Objective function: minimize the manufacturing time
+Constraints: The deposition time difference between adjacent grid is less than some value;

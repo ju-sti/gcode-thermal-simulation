@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://pages.cs.wisc.edu/~yaqi/thermalsimulation.html -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+    <meta http-equiv="EXPIRES" content="Mon, 22 Jul 2002 11:12:01 GMT">
+    <link rel="stylesheet" type="text/css" href="reference/thermaljs/style.css">
+
+    <title>Thermal Simulation for FDM Process</title>
+
+</head>
+<body>
+<div id="page-wrapper">
+
+    <h1>1. Upload G-code File</h1>
+    <div>
+        Select a Gcode file:
+        <input type="file" id="fileInput">
+        <input type="button" value="Refresh Page" onclick="window.location.reload()">
+        <input type="button" value="Use Default G-code" id="Default">
+    </div>
+    <pre id="fileDisplayArea"><pre>    </pre></pre>
+</div>
+<div>
+    <h1>2. Set Simulation Parameters and Run</h1>
+</div>
+<div class="container">
+    <form>
+        <!-- <label>1. # of Time Steps</label> -->
+        1. Number of time steps (Integer):
+        <input type="text" name="nSteps" value="1100" id="nSteps"><br>
+        2. Travel speed (mm/s):
+        <input type="text" name="TRAVEL_SPEED" value="130.0" id="TRAVEL_SPEED"><br>
+        3. Infill speed (mm/s):
+        <input type="text" name="INFILL_SPEED" value="60.0" id="INFILL_SPEED"><br>
+        4. Deposit temperature (°C):
+        <input type="text" name="DEPO_T" value="270.0" id="DEPO_T"><br>
+        5. Envelope temperature (°C):
+        <input type="text" name="ENVELOP_T" value="70.0" id="ENVELOP_T"><br>
+        6. Platform temperature (°C):
+        <input type="text" name="PLATFORM_T" value="70.0" id="PLATFORM_T"><br>
+        7. Density (kg/m^3)
+        <input type="text" name="DENSITY" value="1050" id="DENSITY"><br>
+        8. Heat Capacity (J/(kg * K))
+        <input type="text" name="CAPACITY" value="1900" id="CAPACITY"><br>
+        9. Conductivity (W/(m * K))
+        <input type="text" name="CONDUCTIVITY" value="0.177" id="CONDUCTIVITY"><br>
+        10. Convection Coefficient (W/(m^2 * K))
+        <input type="text" name="CONVECTION_COEFFICIENT" value="75" id="CONVECTION_COEFFICIENT"><br>
+        11. Layer Height (m)
+        <input type="text" name="LAYER_HEIGHT" value="0.0004" id="LAYER_HEIGHT"><br>
+        12. Road Width (m)
+        <input type="text" name="ROAD_WIDTH" value="0.00053" id="ROAD_WIDTH"><br>
+        13. Active Body Parameter p (s)
+        <input type="text" name="ACTIVE_TIME" value="8.0" id="ACTIVE_TIME"><br>
+        14. Active Body Parameter q (Integer)
+        <input type="text" name="NEIGHBOR_DEPTH" value="3" id="NEIGHBOR_DEPTH"><br>
+        15. Active Body Parameter s (Integer)
+        <input type="text" name="N_CORE_ELEMENTS" value="200" id="N_CORE_ELEMENTS"><br>
+        <br><br>
+        <input type="button" value="Click to run" onclick="retrieve();">
+    </form>
+</div>
+
+
+<script src="thermaljs/threex.rendererstats.js"></script>
+<script src="thermaljs/Constant.js"></script>
+<script src="thermaljs/TempColorToRGB.js"></script>
+<script src="thermaljs/Setparameter.js"></script>
+<script src="thermaljs/Point.js"></script>
+<script src="thermaljs/Utility.js"></script>
+<script src="thermaljs/TimeTemp.js"></script>
+<script src="thermaljs/TempHistory.js"></script>
+<script src="thermaljs/Element.js"></script>
+<script src="thermaljs/Bins.js"></script>
+<script src="thermaljs/Contact.js"></script>
+<script src="thermaljs/Simulation.js"></script>
+<script src="thermaljs/ActiveBody.js"></script>
+<script src="thermaljs/Test.js"></script>
+<script src="thermaljs/three.js"></script>
+<script src="thermaljs/OrbitControls.js"></script>
+<script src="thermaljs/Lut.js"></script>
+<script src="thermaljs/ReadGcode_0820.js"></script>
+<canvas id="legend" hidden="true" width="1" height="512"></canvas>
+<script> <!--for some quick test-->
+console.log("Hello World! Version 1.3");
+</script>
+
+
+</body>
+</html>

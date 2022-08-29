@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+
+<script type="module">
+    import * as THREE from './three.module.js';
+    import { GUI } from './dat.gui.module.js';
+
+    import {SausageGeometry} from "./SausageGeometry.js";
+
+
+    var scene, camera, renderer;
+    var geometry, material, mesh;
+
+    init();
+    // animate();
+
+    function init() {
+        const gui = new GUI();
+        var folder_file = gui.addFolder('GCode File');
+        folder_file.open();
+        var params = {
+            loadFile : function() {
+                document.getElementById('gcode-file-input').click();
+
+            },
+            "file_name": ""
+        };
+        folder_file.add(params, 'loadFile').name('Load G-CODE file');
+
+        let state = {
+            "show_until_road": 1,
+            "total_roads": 1,
+            "transparency": 100,
+            "mode": "Single Color"
+        }
+        var folder_viewer_state = gui.addFolder('Viewer');
+        folder_viewer_state.open();
+        folder_viewer_state.add(state, "show_until_road", 1, state["total_roads"]).name("Show until road number");
+        folder_viewer_state.add(state, "transparency", 1, 100).name("Transparency");
+        folder_viewer_state.add(state, "mode", ["Speed", "Time above HDT", "Single Color"])
+
+        document.getElementById('gcode-file-input').addEventListener("input", function () {
+            params["file_name"] = document.getElementById('gcode-file-input').value.split("\\")[2];
+            folder_file.name = params["file_name"];
+            folder_file.updateDisplay();
+            load_file(document.getElementById('gcode-file-input').files[0]);
+            animate();
+        })
+
+        scene = new THREE.Scene();
+
+        /* camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.z = 300;
+        camera.position.x = 150;
+        camera.position.y = 150; */
+
+        camera = new THREE.OrthographicCamera( -10, 310, 310, -10, 1, 1000 );
+        camera.position.z = 30
+        scene.add( camera );
+
+        // background image to find the camera...
+        mesh = new THREE.Mesh( new THREE.BoxGeometry( 300, 300, 0 ), new THREE.MeshBasicMaterial( { color: "white", wireframe: false } ) );
+        mesh.position.set(150, 150, 0);
+        // scene.add( mesh );
+
+        const gridHelper = new THREE.GridHelper( 300, 30 );
+        gridHelper.position.set(150, 150, 0)
+        gridHelper.rotateOnAxis(new THREE.Vector3(1,0,0), THREE.MathUtils.degToRad(90))
+        scene.add( gridHelper );
+
+        /*
+        mesh = new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10 ), new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
+        mesh.position.set(10, 10, 0.24)
+        scene.add( mesh ); */
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        document.body.appendChild( renderer.domElement );
+        renderer.render( scene, camera );
+
+    }
+
+    function animate() {
+
+        requestAnimationFrame( animate );
+
+        //mesh.rotation.x += 0.01;
+        //mesh.rotation.y += 0.02;
+
+        renderer.render( scene, camera );
+
+    }
+    // MODEL ---------------------------
+
+    async function extracted(line) {
+        if (line !== "") {
+            const e = line.split(";");
+            const gcode_line_number = parseInt(e[0])
+            const layer_number = parseInt(e[1])
+            const width = parseFloat(e[6])
+            const layer_height = parseFloat(e[7])
+            const speed = parseFloat(e[8])
+            const time_above = parseFloat(e[9])
+
+            const layer_z_position = layer_height * layer_number;
+            const start_point = new THREE.Vector3(parseFloat(e[2]), parseFloat(e[3]), layer_z_position)
+            const end_point = new THREE.Vector3(parseFloat(e[4]), parseFloat(e[5]), layer_z_position)
+
+            const isTravel = width < 0.01;
+            const isFirstLayer = layer_number === 1
+            if (!isTravel && isFirstLayer) {
+                const road_segment = new THREE.LineCurve(start_point, end_point)
+                const geo = new SausageGeometry(road_segment, 1, .5, 4, false)
+                console.log(geo.toJSON());
+                // parallel to (x, y , z). On creation, the cuboid is centred on the origin.
+                // var geo = new THREE.BoxGeometry(2, width, layer_height);
+                var mat = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+                var mesh1 = new THREE.Mesh(geo, mat);
+                // mesh1.position.set(start_point[0], start_point[1], layer_height);
+                scene.add(mesh1);
+
+
+                renderer.render( scene, camera );
+            }
+        }
+    }
+
+
+    function load_file(file) {
+        material = new THREE.MeshBasicMaterial( );
+        file.text().then(text => {
+            let splitted_text = text.split("\r\n");
+            splitted_text.forEach(function(line) {
+                extracted(line);
+            })
+        })
+
+
+    }
+</script>
+<input hidden id="gcode-file-input" type="file" accept=".gcodesim" />
+</body>
+</html>
